@@ -3,8 +3,23 @@
   <head>
     <meta charset="UTF-8">
     <title>Pedra, Papel e Tesoura</title>
+    <style>
+      #results {
+        white-space: pre-line;
+      }
+    </style>
   </head>
   <body>
-   <script src="script.js"></script>
+    <h1>Pedra, Papel e Tesoura</h1>
+
+    <div>
+      <button type="button" data-choice="pedra">Pedra</button>
+      <button type="button" data-choice="papel">Papel</button>
+      <button type="button" data-choice="tesoura">Tesoura</button>
+    </div>
+
+    <div id="results" aria-live="polite"></div>
+
+    <script src="script.js"></script>
   </body>
 </html>

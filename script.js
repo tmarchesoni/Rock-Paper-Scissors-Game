@@ -1,3 +1,10 @@
+let humanScore = 0;
+let computerScore = 0;
+const winningScore = 5;
+
+const buttons = document.querySelectorAll("button[data-choice]");
+const results = document.querySelector("#results");
+
 function getComputerChoice() {
   const random = Math.random();
 
@@ -10,48 +17,54 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  const choice = prompt("Digite sua escolha: pedra, papel ou tesoura").toLowerCase();
-  return choice;
+function updateResults(message) {
+  results.textContent = `${message}\nPlacar atual: Você ${humanScore} x ${computerScore} Computador`;
 }
 
-function playGame() {
-  let humanScore = 0;
-  let computerScore = 0;
-
-  function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toLowerCase();
-
-    if (humanChoice === computerChoice) {
-      console.log("Empate!");
-    } else if (
-      (humanChoice === "pedra" && computerChoice === "tesoura") ||
-      (humanChoice === "papel" && computerChoice === "pedra") ||
-      (humanChoice === "tesoura" && computerChoice === "papel")
-    ) {
-      humanScore++;
-      console.log(`Você ganhou! ${humanChoice} venceu ${computerChoice}`);
-    } else {
-      computerScore++;
-      console.log(`Você perdeu! ${computerChoice} venceu ${humanChoice}`);
-    }
+function announceWinner() {
+  if (humanScore === winningScore) {
+    updateResults("🏆 Você venceu o jogo!");
+  } else if (computerScore === winningScore) {
+    updateResults("💻 O computador venceu o jogo!");
   }
 
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
 
-  console.log(`\nPlacar final: Você ${humanScore} x ${computerScore} Computador`);
+function playRound(humanChoice) {
+  if (humanScore === winningScore || computerScore === winningScore) {
+    return;
+  }
 
-  if (humanScore > computerScore) {
-    console.log("🏆 Você venceu o jogo!");
-  } else if (computerScore > humanScore) {
-    console.log("💻 O computador venceu o jogo!");
+  const computerChoice = getComputerChoice();
+
+  if (humanChoice === computerChoice) {
+    updateResults(`Empate! Vocês escolheram ${humanChoice}.`);
+  } else if (
+    (humanChoice === "pedra" && computerChoice === "tesoura") ||
+    (humanChoice === "papel" && computerChoice === "pedra") ||
+    (humanChoice === "tesoura" && computerChoice === "papel")
+  ) {
+    humanScore++;
+    updateResults(`Você ganhou! ${humanChoice} venceu ${computerChoice}.`);
   } else {
-    console.log("🤝 O jogo terminou em empate!");
+    computerScore++;
+    updateResults(`Você perdeu! ${computerChoice} venceu ${humanChoice}.`);
+  }
+
+  if (humanScore === winningScore || computerScore === winningScore) {
+    announceWinner();
   }
 }
 
-playGame();
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    playRound(button.dataset.choice);
+  });
+});
+
+updateResults("Escolha pedra, papel ou tesoura para começar.");
+
+
